@@ -1,1 +1,27 @@
+name: Node.js Express CD with Docker Hub
 
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  build&push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Login Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }} #username secrets vairalbles on github
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Build && Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/eshopweb:v1.0 #push >> ?
